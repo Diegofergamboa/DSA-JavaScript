@@ -6,17 +6,19 @@ class HasTable {
     hashMethod(key) {
         let hash = 0;
         for (let i = 0; i < key.length; i++) {
-            hash += key.charCodeAt(i);
+            hash = (hash + key.charCodeAt(i) * i) % this.data.length;
         }
-        return hash % this.data.length
+        return hash
     }
 
     set(key, value) {
         let address = this.hashMethod(key);
+        console.log(address);
         if (!this.data[address]) {
             this.data[address] = [];
         }
         this.data[address].push([key, value]);
+        return this.data
     }
 
     get(key) {
@@ -38,10 +40,12 @@ class HasTable {
         if (currentBucket) {
             for (let i = 0; i < currentBucket.length; i++) {
                 if (currentBucket[i][0] === key) {
-                    delete this.data[address][i];
+                    currentBucket.splice(i, 1);
+                    return true;
                 }
             }
         }
+        return false;
     }
 
     display() {
@@ -54,3 +58,9 @@ class HasTable {
 }
 
 const myHashTable = new HasTable(10);
+myHashTable.set('Key', 'Value');
+console.log(myHashTable);
+myHashTable.set('Primer', 'Value');
+console.log(myHashTable);
+myHashTable.set('Segundo', 'Value');
+console.log(myHashTable);
